@@ -25,7 +25,7 @@
 //
 // ************************************************************************
 //@HEADER
-
+#include <hpctoolkit.h>
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -84,6 +84,7 @@ void add_timestring_to_yaml(YAML_Doc& doc);
 //
 
 int main(int argc, char** argv) {
+  hpctoolkit_sampling_stop();
   miniFE::Parameters params;
   miniFE::get_parameters(argc, argv, params);
 
@@ -149,10 +150,11 @@ int main(int argc, char** argv) {
   //To run miniFE with float instead of double, or 'long long' instead of int,
   //etc., change these template-parameters by changing the macro definitions in
   //the makefile or on the make command-line.
-
+  hpctoolkit_sampling_start();
   int return_code =
      miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc);
 
+  hpctoolkit_sampling_stop();
   miniFE::timer_type total_time = miniFE::mytimer() - start_time;
 
 #ifdef MINIFE_REPORT_RUSAGE
